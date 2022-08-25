@@ -130,6 +130,15 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testComparePlaceholderInSearchInput(){
+        assertElementHasText(
+                By.xpath("//*[@resource-id='org.wikipedia:id/search_container']/*[@class='android.widget.TextView']"),
+                "Search Wikipedia",
+                "We see unexpected placeholder!"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -166,5 +175,16 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSecond);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String text, String assert_message){
+        WebElement element = waitForElementPresent(by, "Cannot find element");
+        String element_text = element.getAttribute("text");
+
+        Assert.assertEquals(
+                assert_message,
+                text,
+                element_text
+        );
     }
 }
