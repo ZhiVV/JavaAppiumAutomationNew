@@ -10,7 +10,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.xml.soap.SOAPPart;
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -136,6 +138,46 @@ public class FirstTest {
                 By.xpath("//*[@resource-id='org.wikipedia:id/search_container']/*[@class='android.widget.TextView']"),
                 "Search Wikipedia",
                 "We see unexpected placeholder!"
+        );
+    }
+
+    @Test
+    public void testMultipleSearchResultAndCancel(){
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "java",
+                "Cannot find search input",
+                5
+        );
+
+        List<WebElement> search_result_list = driver.findElementsById("org.wikipedia:id/page_list_item_container");
+
+        Assert.assertTrue(
+                "Cannot find two or more articles in search result",
+                search_result_list.size() > 1
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find search field",
+                5
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "X is still present on the page",
+                5
         );
     }
 
