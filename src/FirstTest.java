@@ -181,6 +181,32 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testTextContainsInArticlesTitles(){
+        String searchedAndCheckingText = "JAVA";
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                searchedAndCheckingText,
+                "Cannot find search input",
+                5
+        );
+
+        List<WebElement> article_title_list = driver.findElementsById("org.wikipedia:id/page_list_item_title");
+        for (WebElement title : article_title_list) {
+            Assert.assertTrue(
+                    "Title '" + title.getText() + "' does not contain '" + searchedAndCheckingText + "'",
+                    title.getText().toLowerCase().contains(searchedAndCheckingText.toLowerCase())
+            );
+        }
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
